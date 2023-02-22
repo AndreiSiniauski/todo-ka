@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 
 import TodoApp from './components/todo-app';
 
-import './index.css'
+import './index.css';
 
-ReactDOM.render(<TodoApp />,
-  document.getElementById('root'));
+ReactDOM.render(<TodoApp />, document.getElementById('root'));
