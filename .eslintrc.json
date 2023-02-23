@@ -1,7 +1,7 @@
 {
   "env": {
     "browser": true,
-    "es2021": true
+    "es2022": true
   },
   "ignorePatterns": ["node_modules", "dist", "build"],
   "extends": [
@@ -15,14 +15,14 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 12,
-    "sourceType": "module",
-    "parser": "babel-eslint"
+    "ecmaVersion": 2022,
+    "sourceType": "module"
   },
   "plugins": ["react", "prettier", "import"],
   "rules": {
     "indent": ["error", 2],
     "prettier/prettier": "error",
+    "linebreak-style": [0, "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "react/react-in-jsx-scope": "off",
@@ -43,9 +43,6 @@
         "extensions": [".js", ".jsx", ".ts", ".tsx"],
         "moduleDirectory": ["node_modules", "src/"]
       }
-    },
-    "react": {
-      "version": "18.2.0"
     }
   }
 }

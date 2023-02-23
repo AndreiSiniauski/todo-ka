@@ -56,14 +56,13 @@ export default class TodoApp extends Component {
   };
 
   filteredItems = (items, filter) => {
-    switch (filter) {
-    case 'all':
+    if (filter === 'all') {
       return items;
-    case 'active':
+    } else if (filter === 'active') {
       return items.filter((item) => !item.done);
-    case 'completed':
+    } else if (filter === 'completed') {
       return items.filter((item) => item.done);
-    default:
+    } else {
       return items;
     }
   };
