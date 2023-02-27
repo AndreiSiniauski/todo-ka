@@ -5,10 +5,36 @@ import { formatDistanceToNow } from 'date-fns';
 import Task from '../task';
 import './task-list.css';
 
-function TaskList({ todo, onDeleted, onToggleDone }) {
+function TaskList({ todo, onDeleted, onToggleDone, onEdit, editingItemId, onChangeItem }) {
   const elements = todo.map((item) => {
     const { id, ...itemProps } = item;
     const created = formatDistanceToNow(item.created, { includeSeconds: true });
+
+    let label;
+
+    function onSubmit(e) {
+      e.preventDefault();
+      onChangeItem(label);
+      onEdit(null);
+    }
+
+    function onBlur() {
+      onEdit(null);
+    }
+
+    function onLabelChange(e) {
+      label = e.target.value;
+    }
+
+    if (editingItemId === id) {
+      return (
+        <li className="editing" key={id}>
+          <form onSubmit={onSubmit} onBlur={onBlur}>
+            <input type="text" className="edit" defaultValue={itemProps.label} onChange={onLabelChange} />
+          </form>
+        </li>
+      );
+    }
     return (
       <Task
         {...itemProps}
@@ -16,6 +42,7 @@ function TaskList({ todo, onDeleted, onToggleDone }) {
         onDeleted={() => onDeleted(id)}
         onToggleDone={() => onToggleDone(id)}
         creationTime={created}
+        onEdit={() => onEdit(id)}
       />
     );
   });

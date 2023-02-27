@@ -24,7 +24,7 @@ export default class Task extends Component {
   };
 
   render() {
-    const { label, onDeleted, done, onToggleDone, creationTime } = this.props;
+    const { label, onDeleted, done, onToggleDone, creationTime, onEdit } = this.props;
 
     let classNames = 'active';
 
@@ -43,7 +43,7 @@ export default class Task extends Component {
             </span>
             <span className="created">created {creationTime}</span>
           </label>
-          <button className="icon icon-edit" />
+          <button className="icon icon-edit" onClick={onEdit} />
           <button className="icon icon-destroy" onClick={onDeleted} />
         </div>
       </li>

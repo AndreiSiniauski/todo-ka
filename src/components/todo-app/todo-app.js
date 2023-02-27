@@ -47,6 +47,13 @@ export default class TodoApp extends Component {
   state = {
     todoData: this.props.defaultTasks,
     filter: 'all',
+    editingItemId: null,
+  };
+
+  handleEditButtonClick = (id) => {
+    this.setState({
+      editingItemId: id,
+    });
   };
 
   changeFilter = (filter) => {
@@ -126,6 +133,21 @@ export default class TodoApp extends Component {
     });
   };
 
+  changeItem(arr, propName) {
+    const idx = arr.findIndex((el) => el.id === this.state.editingItemId);
+
+    const oldItem = arr[idx];
+    const newItem = { ...oldItem, label: propName, created: new Date() };
+
+    return [...arr.slice(0, idx), newItem, ...arr.slice(idx + 1)];
+  }
+
+  onChangeItem = (text) => {
+    this.setState(({ todoData }) => ({
+      todoData: this.changeItem(todoData, text),
+    }));
+  };
+
   render() {
     const { todoData, filter } = this.state;
     const countDone = todoData.filter((el) => el.done).length;
@@ -139,6 +161,9 @@ export default class TodoApp extends Component {
           todo={this.filteredItems(todoData, filter)}
           onDeleted={this.deleteItem}
           onToggleDone={this.onToggleDone}
+          onEdit={this.handleEditButtonClick}
+          editingItemId={this.state.editingItemId}
+          onChangeItem={this.onChangeItem}
         />
         <Footer
           onCount={todoCount}
