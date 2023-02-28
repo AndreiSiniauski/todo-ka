@@ -40,6 +40,7 @@ export default class TodoApp extends Component {
         done: PropTypes.bool,
         id: PropTypes.number,
         created: PropTypes.instanceOf(Date),
+        timerCount: PropTypes.number,
       })
     ),
   };
@@ -111,17 +112,18 @@ export default class TodoApp extends Component {
     });
   };
 
-  createTodoItem(label) {
+  createTodoItem(label, timer) {
     return {
       label,
       done: false,
       id: this.maxId++,
       created: new Date(),
+      timerCount: timer,
     };
   }
 
-  addItem = (text) => {
-    const newItem = this.createTodoItem(text);
+  addItem = (text, timer) => {
+    const newItem = this.createTodoItem(text, timer);
     newItem.created = new Date();
 
     this.setState(({ todoData }) => {

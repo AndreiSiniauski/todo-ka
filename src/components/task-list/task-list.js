@@ -67,6 +67,7 @@ TaskList.propTypes = {
       done: PropTypes.bool.isRequired,
       id: PropTypes.number.isRequired,
       created: PropTypes.instanceOf(Date),
+      timerCount: PropTypes.number,
     })
   ).isRequired,
   onDeleted: PropTypes.func,
