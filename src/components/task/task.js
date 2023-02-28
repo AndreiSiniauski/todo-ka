@@ -48,7 +48,6 @@ export default class Task extends React.Component {
   render() {
     const { label, onDeleted, done, creationTime, onEdit } = this.props;
     const { timerValue, timeActive } = this.state;
-    console.log(timerValue);
     const timer = format(timerValue * 1000, 'mm:ss');
     const classNames = done ? 'completed' : '';
     const disabledBtn = done ? 'disabled' : false;
