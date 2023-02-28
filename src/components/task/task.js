@@ -7,7 +7,7 @@ export default class Task extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      timerValue: props.timerCount,
+      timerValue: this.props.timerCount || 300,
       idTimer: null,
       timeActive: false,
     };

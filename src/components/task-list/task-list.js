@@ -7,7 +7,7 @@ import './task-list.css';
 
 function TaskList({ todo, onDeleted, onToggleDone, onEdit, editingItemId, onChangeItem }) {
   const elements = todo.map((item) => {
-    const { id, ...itemProps } = item;
+    const { id, timerCount, ...itemProps } = item;
     const created = formatDistanceToNow(item.created, { includeSeconds: true });
 
     let label;
@@ -43,6 +43,7 @@ function TaskList({ todo, onDeleted, onToggleDone, onEdit, editingItemId, onChan
         onToggleDone={() => onToggleDone(id)}
         creationTime={created}
         onEdit={() => onEdit(id)}
+        timerCount={timerCount}
       />
     );
   });
@@ -67,7 +68,6 @@ TaskList.propTypes = {
       done: PropTypes.bool.isRequired,
       id: PropTypes.number.isRequired,
       created: PropTypes.instanceOf(Date),
-      timerCount: PropTypes.number,
     })
   ).isRequired,
   onDeleted: PropTypes.func,

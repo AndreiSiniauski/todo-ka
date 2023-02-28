@@ -40,7 +40,6 @@ export default class TodoApp extends Component {
         done: PropTypes.bool,
         id: PropTypes.number,
         created: PropTypes.instanceOf(Date),
-        timerCount: PropTypes.number,
       })
     ),
   };
