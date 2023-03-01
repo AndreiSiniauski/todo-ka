@@ -71,6 +71,7 @@
 .todo-list li label .description {
   font-size: 13px;
   color: gray;
+  height: 23px;
 }
 
 .todo-list li label .title {
@@ -138,6 +139,7 @@
   font-size: 18px;
   width: 18px;
   height: 18px;
+  margin-right: 10px;
 }
 
 .todo-list li .icon-play {
@@ -146,6 +148,9 @@
 
 .icon-pause:after {
   content: '⏸';
+  position: absolute;
+  top:15px;
+  left:272px;
 }
 
 .icon-play:after {
