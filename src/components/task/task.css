@@ -74,6 +74,11 @@
   height: 23px;
 }
 
+.word {
+  min-width: 123px;
+  text-align: center;
+}
+
 .todo-list li label .title {
   word-break: break-all;
   display: block;
@@ -149,8 +154,8 @@
 .icon-pause:after {
   content: '⏸';
   position: absolute;
-  top:15px;
-  left:272px;
+  top: 15px;
+  left: 272px;
 }
 
 .icon-play:after {

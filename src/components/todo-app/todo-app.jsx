@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import NewTaskForm from '../new-task-form';
@@ -7,62 +7,21 @@ import Footer from '../footer';
 
 import './todo-app.css';
 
-export default class TodoApp extends Component {
-  maxId = 100;
+function TodoApp({ defaultTasks }) {
+  const [todoData, setTodoData] = useState(defaultTasks);
+  const [filter, setFilter] = useState('all');
+  const [editingItemId, setEditingItemId] = useState(null);
+  let maxId = useRef(100);
 
-  static defaultProps = {
-    defaultTasks: [
-      {
-        label: 'Completed task',
-        done: false,
-        id: 1,
-        created: new Date(),
-      },
-      {
-        label: 'Editing task',
-        done: false,
-        id: 2,
-        created: new Date(),
-      },
-      {
-        label: 'Active task',
-        done: false,
-        id: 3,
-        created: new Date(),
-      },
-    ],
+  const handleEditButtonClick = (id) => {
+    setEditingItemId(id);
   };
 
-  static propTypes = {
-    defaultTasks: PropTypes.arrayOf(
-      PropTypes.shape({
-        label: PropTypes.string,
-        done: PropTypes.bool,
-        id: PropTypes.number,
-        created: PropTypes.instanceOf(Date),
-      })
-    ),
+  const changeFilter = (filter) => {
+    setFilter(filter);
   };
 
-  state = {
-    todoData: this.props.defaultTasks,
-    filter: 'all',
-    editingItemId: null,
-  };
-
-  handleEditButtonClick = (id) => {
-    this.setState({
-      editingItemId: id,
-    });
-  };
-
-  changeFilter = (filter) => {
-    this.setState({
-      filter,
-    });
-  };
-
-  filteredItems = (items, filter) => {
+  const filteredItems = (items, filter) => {
     if (filter === 'all') {
       return items;
     } else if (filter === 'active') {
@@ -74,105 +33,120 @@ export default class TodoApp extends Component {
     }
   };
 
-  deleteItem = (id) => {
-    this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id);
-      const newArray = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)];
+  const deleteItem = (id) => {
+    const idx = todoData.findIndex((el) => el.id === id);
+    const newArray = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)];
 
-      return {
-        todoData: newArray,
-      };
-    });
+    setTodoData(newArray);
   };
 
-  toggleProperty(arr, id, propName) {
+  const toggleProperty = (arr, id, propName) => {
     const idx = arr.findIndex((el) => el.id === id);
 
     const oldItem = arr[idx];
     const newItem = { ...oldItem, [propName]: !oldItem[propName] };
 
     return [...arr.slice(0, idx), newItem, ...arr.slice(idx + 1)];
-  }
-
-  onToggleDone = (id) => {
-    this.setState(({ todoData }) => ({
-      todoData: this.toggleProperty(todoData, id, 'done'),
-    }));
   };
 
-  onDeleteAllDone = () => {
-    this.setState(({ todoData }) => {
-      const idx = todoData.filter((el) => el.done !== true);
-      const newArrayS = [...idx];
-
-      return {
-        todoData: newArrayS,
-      };
-    });
+  const onToggleDone = (id) => {
+    setTodoData((todoData) => toggleProperty(todoData, id, 'done'));
   };
 
-  createTodoItem(label, timer) {
+  const onDeleteAllDone = () => {
+    const idx = todoData.filter((el) => el.done !== true);
+    const newArrayS = [...idx];
+
+    setTodoData(newArrayS);
+  };
+
+  const createTodoItem = (label, timer) => {
     return {
       label,
       done: false,
-      id: this.maxId++,
+      id: maxId.current++,
       created: new Date(),
       timerCount: timer,
     };
-  }
-
-  addItem = (text, timer) => {
-    const newItem = this.createTodoItem(text, timer);
-    newItem.created = new Date();
-
-    this.setState(({ todoData }) => {
-      const newArr = [...todoData, newItem];
-
-      return {
-        todoData: newArr,
-      };
-    });
   };
 
-  changeItem(arr, propName) {
-    const idx = arr.findIndex((el) => el.id === this.state.editingItemId);
+  const addItem = (text, timer) => {
+    const newItem = createTodoItem(text, timer);
+    newItem.created = new Date();
+
+    setTodoData([...todoData, newItem]);
+  };
+
+  const changeItem = (arr, propName) => {
+    const idx = arr.findIndex((el) => el.id === editingItemId);
 
     const oldItem = arr[idx];
     const newItem = { ...oldItem, label: propName, created: new Date() };
 
     return [...arr.slice(0, idx), newItem, ...arr.slice(idx + 1)];
-  }
-
-  onChangeItem = (text) => {
-    this.setState(({ todoData }) => ({
-      todoData: this.changeItem(todoData, text),
-    }));
   };
 
-  render() {
-    const { todoData, filter } = this.state;
-    const countDone = todoData.filter((el) => el.done).length;
+  const onChangeItem = (text) => {
+    setTodoData((todoData) => changeItem(todoData, text));
+  };
 
-    const todoCount = todoData.length - countDone;
+  const countDone = todoData.filter((el) => el.done).length;
 
-    return (
-      <section className="todo-app">
-        <NewTaskForm onItemAdded={this.addItem} />
-        <TaskList
-          todo={this.filteredItems(todoData, filter)}
-          onDeleted={this.deleteItem}
-          onToggleDone={this.onToggleDone}
-          onEdit={this.handleEditButtonClick}
-          editingItemId={this.state.editingItemId}
-          onChangeItem={this.onChangeItem}
-        />
-        <Footer
-          onCount={todoCount}
-          onDeleteAllDone={this.onDeleteAllDone}
-          onChangeFilter={this.changeFilter}
-          currentFilter={filter}
-        />
-      </section>
-    );
-  }
+  const todoCount = todoData.length - countDone;
+
+  return (
+    <section className="todo-app">
+      <NewTaskForm onItemAdded={addItem} />
+      <TaskList
+        todo={filteredItems(todoData, filter)}
+        onDeleted={deleteItem}
+        onToggleDone={onToggleDone}
+        onEdit={handleEditButtonClick}
+        editingItemId={editingItemId}
+        onChangeItem={onChangeItem}
+      />
+      <Footer
+        onCount={todoCount}
+        onDeleteAllDone={onDeleteAllDone}
+        onChangeFilter={changeFilter}
+        currentFilter={filter}
+      />
+    </section>
+  );
 }
+
+TodoApp.defaultProps = {
+  defaultTasks: [
+    {
+      label: 'Completed task',
+      done: false,
+      id: 1,
+      created: new Date(),
+    },
+    {
+      label: 'Editing task',
+      done: false,
+      id: 2,
+      created: new Date(),
+    },
+    {
+      label: 'Active task',
+      done: false,
+      id: 3,
+      created: new Date(),
+    },
+  ],
+};
+
+TodoApp.propTypes = {
+  defaultTasks: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      done: PropTypes.bool,
+      id: PropTypes.number,
+      created: PropTypes.instanceOf(Date),
+    })
+  ),
+};
+
+export default TodoApp;

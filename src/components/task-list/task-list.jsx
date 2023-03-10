@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -6,9 +6,21 @@ import Task from '../task';
 import './task-list.css';
 
 function TaskList({ todo, onDeleted, onToggleDone, onEdit, editingItemId, onChangeItem }) {
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   const elements = todo.map((item) => {
     const { id, timerCount, ...itemProps } = item;
-    const created = formatDistanceToNow(item.created, { includeSeconds: true });
+    const created = formatDistanceToNow(item.created, { includeSeconds: true, now: currentTime });
 
     let label;
 
