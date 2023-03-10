@@ -11,7 +11,7 @@ function TodoApp({ defaultTasks }) {
   const [todoData, setTodoData] = useState(defaultTasks);
   const [filter, setFilter] = useState('all');
   const [editingItemId, setEditingItemId] = useState(null);
-  let maxId = useRef(100);
+  const maxId = useRef(100);
 
   const handleEditButtonClick = (id) => {
     setEditingItemId(id);
